@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { SafeAreaView, Text, View, TextInput, TouchableOpacity } from "react-native";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { router } from "expo-router";
 
 const SingUpScreen = () => {
     const [email, setEmail] = useState("");
@@ -9,6 +11,18 @@ const SingUpScreen = () => {
         // Implementar lógica de cadastro aqui
         console.log("Cadastro realizado", { email, password });
     };
+
+    const handlerLogin = async () => {
+        await AsyncStorage.setItem('email', email);
+        await AsyncStorage.setItem('password', password);
+
+        console.log('email', email);
+        console.log('password', password);
+
+
+
+        router.push('/login');
+    }
 
     return (
         <SafeAreaView className="flex-1 bg-white">
@@ -31,7 +45,7 @@ const SingUpScreen = () => {
                 />
                 <TouchableOpacity
                     className="w-full bg-blue-500 rounded-lg py-3 items-center"
-                    onPress={handleSignUp}
+                    onPress={handlerLogin}
                 >
                     <Text className="text-white font-bold text-lg">Cadastrar</Text>
                 </TouchableOpacity>

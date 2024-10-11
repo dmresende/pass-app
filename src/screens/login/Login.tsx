@@ -1,33 +1,76 @@
 import React, { useState } from 'react';
 import { View, TextInput, TouchableOpacity, Text, Image, Alert } from 'react-native';
 import { router } from 'expo-router';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import Toast from 'react-native-toast-message';
 
 const LoginScreen = () => {
   const [email, setEmail] = useState('');
-  const [senha, setSenha] = useState('');
-  const [camposInvalidos, setCamposInvalidos] = useState({ email: false, senha: false });
+  const [password, setPassword] = useState('');
+  const [invalidFields, setInvalidFields] = useState({ email: false, password: false });
+  const [message, setMessage] = useState('');
 
-  const handleLogin = () => {
-    let novosInvalidos = { email: false, senha: false };
 
-    if (email !== 'teste') 
-      novosInvalidos.email = true;
-    
-    if (senha !== '123') 
-      novosInvalidos.senha = true;
-    
-    setCamposInvalidos(novosInvalidos);
 
-    if (email === 'teste' && senha === '123') {
-      Alert.alert('Sucesso', 'Login efetuado com sucesso!');
-      router.push('/home');
-    } else {
-      Alert.alert('Erro', 'Falha no login. Por favor, verifique suas credenciais.');
+  const handleLogin = async () => {
+    try {
+      const [emailStorage, passwordStorage] = await Promise.all([
+        AsyncStorage.getItem('email'),
+        AsyncStorage.getItem('password')
+      ]);
+
+      let invalidFields = { email: false, password: false };
+
+      if (!email || email !== emailStorage) {
+        invalidFields.email = true;
+      }
+
+      if (!password || password !== passwordStorage) {
+        invalidFields.password = true;
+      }
+
+      setInvalidFields(invalidFields);
+
+      if (invalidFields.email || invalidFields.password) {
+        Toast.show({
+          type: 'error',
+          text1: 'Falha no login',
+          text2: 'Por favor, verifique suas credenciais.',
+          position: 'top'
+        });
+        return;
+      }
+
+      console.log('🚀Email: ', email, '💄 Password: ', password);
+
+      if (email == emailStorage && password == passwordStorage) {
+        Toast.show({
+          type: 'success',
+          text1: 'Login efetuado com sucesso!',
+          text2: 'Bem-vindo ao aplicativo!',
+          position: 'top',
+          visibilityTime: 4000, // Exibe o toast por 4 segundos
+        });
+        setTimeout(() => {
+          router.push('/home');
+        }, 500);
+      } else {
+        Toast.show({
+          type: 'error',
+          text1: 'Erro',
+          text2: 'Algo deu errado ao tentar fazer login.',
+          position: 'top'
+        });
+      }
+
+    } catch (error) {
+      console.log(error);
     }
   };
 
   return (
     <View className="flex-1 justify-center items-center p-4 bg-white">
+      <Toast />
       <View className="w-full mb-8">
         <Image
           source={require('../../../assets/images/icon.png')}
@@ -36,23 +79,23 @@ const LoginScreen = () => {
         />
       </View>
       <TextInput
-        className={`w-full h-12 border rounded-md mb-4 px-4 ${camposInvalidos.email ? 'border-red-500' : 'border-gray-300'}`}
+        className={`w-full h-12 border rounded-md mb-4 px-4 ${invalidFields.email ? 'border-red-500' : 'border-gray-300'}`}
         placeholder="Email"
         value={email}
         onChangeText={(text) => {
           setEmail(text);
-          setCamposInvalidos({ ...camposInvalidos, email: false });
+          setInvalidFields({ ...invalidFields, email: false });
         }}
         keyboardType="email-address"
         autoCapitalize="none"
       />
       <TextInput
-        className={`w-full h-12 border rounded-md mb-6 px-4 ${camposInvalidos.senha ? 'border-red-500' : 'border-gray-300'}`}
+        className={`w-full h-12 border rounded-md mb-6 px-4 ${invalidFields.password ? 'border-red-500' : 'border-gray-300'}`}
         placeholder="Senha"
-        value={senha}
+        value={password}
         onChangeText={(text) => {
-          setSenha(text);
-          setCamposInvalidos({ ...camposInvalidos, senha: false });
+          setPassword(text);
+          setInvalidFields({ ...invalidFields, password: false });
         }}
         secureTextEntry
       />
