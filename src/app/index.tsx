@@ -1,16 +1,7 @@
-import { Link } from "expo-router"
-import { SafeAreaView } from "react-native"
-
+import { Redirect } from "expo-router"
 
 const index = () => {
-
-    return (
-        <SafeAreaView className="flex-1 justify-center items-center">
-            <Link href="/home">Home</Link>
-            <Link href="/alunos">Alunos</Link>
-            <Link href="/passwords">Passwords</Link>
-        </SafeAreaView>
-    )
+    return <Redirect href="/login" />
 }
 
 export default index

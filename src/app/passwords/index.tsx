@@ -1,11 +1,9 @@
-import { SafeAreaView, Text, View } from "react-native"
+import PasswordsScreen from "@/src/screens/passwords/Passwords"
 
-const index = () => {
+const PasswordsIndex = () => {
     return (
-        <SafeAreaView className="flex-1 justify-center items-center">
-            <Text>PASSWORDS</Text>
-        </SafeAreaView>
+        <PasswordsScreen />
     )
 }
 
-export default index
+export default PasswordsIndex
