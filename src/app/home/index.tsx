@@ -1,13 +1,39 @@
 import React from 'react';
-import { SafeAreaView, Text } from "react-native";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import HomeScreen from "@/src/screens/home/Home";
+import PasswordsScreen from '@/src/screens/passwords/Passwords';
+import { Ionicons } from "@expo/vector-icons"; // Certifique-se de que está importado corretamente
 
-const HomeIndex = () => {
+
+const Tab = createBottomTabNavigator();
+
+const HomeWithTabs = () => {
     return (
-        <SafeAreaView className="flex-1">
-            <HomeScreen />
-        </SafeAreaView>
+        <Tab.Navigator>
+            <Tab.Screen
+                name="home"
+                component={HomeScreen}
+                options={{
+                    headerShown: false,
+                    title: "",
+                    tabBarIcon: ({ color, size }) => (
+                        <Ionicons name="home" size={size} color={color} />
+                    ),
+                }}
+            />
+            <Tab.Screen
+                name="passwords"
+                component={PasswordsScreen}
+                options={{
+                    headerShown: false,
+                    title: "",
+                    tabBarIcon: ({ color, size }) => (
+                        <Ionicons name="lock-closed" size={size} color={color} />
+                    ),
+                }}
+            />
+        </Tab.Navigator>
     );
 };
 
-export default HomeIndex;
+export default HomeWithTabs;

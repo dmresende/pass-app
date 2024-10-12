@@ -2,26 +2,39 @@ import React, { useState } from "react";
 import { SafeAreaView, Text, View, TextInput, TouchableOpacity } from "react-native";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { router } from "expo-router";
+import Toast from "react-native-toast-message";
 
 const SingUpScreen = () => {
+    // TODO: Implementar validação
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
 
-    const handleSignUp = () => {
-        // Implementar lógica de cadastro aqui
-        console.log("Cadastro realizado", { email, password });
-    };
+    const handleSignUp = async () => {
+        // TODO: Implementar validação de usuároi e senha;
+        //TODO: Implementar armazenamento de usuário e senha;
+        if (email === '' || password === '') {
+            console.log('if handleSignUp');
+            Toast.show({
+                type: 'error',
+                text1: 'Falha no cadastro',
+                text2: 'Por favor, informe os campos corretamente',
+                position: 'top'
+            })
+            return;
+        }
 
-    const handlerLogin = async () => {
         await AsyncStorage.setItem('email', email);
         await AsyncStorage.setItem('password', password);
 
-        console.log('email', email);
-        console.log('password', password);
-
-
-
-        router.push('/login');
+        Toast.show({
+            type: 'success',
+            text1: 'Cadastro realizado com sucesso',
+            text2: 'Redirecionando para o login',
+            position: 'top'
+        })
+        setTimeout(() => {
+            router.push('/login');
+        }, 500);
     }
 
     return (
@@ -45,13 +58,14 @@ const SingUpScreen = () => {
                 />
                 <TouchableOpacity
                     className="w-full bg-blue-500 rounded-lg py-3 items-center"
-                    onPress={handlerLogin}
+                    onPress={handleSignUp}
                 >
                     <Text className="text-white font-bold text-lg">Cadastrar</Text>
                 </TouchableOpacity>
                 <Text className="mt-6 text-gray-600">
                     Cadastro-se com Google
                 </Text>
+                <Toast />
             </View>
         </SafeAreaView>
     );

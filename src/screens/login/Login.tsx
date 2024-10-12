@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, TextInput, TouchableOpacity, Text, Image, Alert } from 'react-native';
+import { View, TextInput, TouchableOpacity, Text, Image } from 'react-native';
 import { router } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Toast from 'react-native-toast-message';
@@ -8,26 +8,21 @@ const LoginScreen = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [invalidFields, setInvalidFields] = useState({ email: false, password: false });
-  const [message, setMessage] = useState('');
-
-
 
   const handleLogin = async () => {
-    try {
-      const [emailStorage, passwordStorage] = await Promise.all([
-        AsyncStorage.getItem('email'),
-        AsyncStorage.getItem('password')
-      ]);
+    const [emailStorage, passwordStorage] = await Promise.all([
+      AsyncStorage.getItem('email'),
+      AsyncStorage.getItem('password')
+    ]);
 
+    try {
       let invalidFields = { email: false, password: false };
 
-      if (!email || email !== emailStorage) {
+      if (!email || email !== emailStorage)
         invalidFields.email = true;
-      }
 
-      if (!password || password !== passwordStorage) {
+      if (!password || password !== passwordStorage)
         invalidFields.password = true;
-      }
 
       setInvalidFields(invalidFields);
 
@@ -54,14 +49,13 @@ const LoginScreen = () => {
         setTimeout(() => {
           router.push('/home');
         }, 500);
-      } else {
+      } else
         Toast.show({
           type: 'error',
           text1: 'Erro',
           text2: 'Algo deu errado ao tentar fazer login.',
           position: 'top'
         });
-      }
 
     } catch (error) {
       console.log(error);
@@ -70,7 +64,6 @@ const LoginScreen = () => {
 
   return (
     <View className="flex-1 justify-center items-center p-4 bg-white">
-      <Toast />
       <View className="w-full mb-8">
         <Image
           source={require('../../../assets/images/icon.png')}
@@ -115,12 +108,15 @@ const LoginScreen = () => {
         </Text>
       </TouchableOpacity>
       <View className="absolute bottom-0 w-full items-center pb-4">
+        {/* To-DO: Implementar o logo da aplicação */}
+        {/*
         <Image
           source={require('../../../assets/images/logo.png')}
           className="w-40 h-20"
           resizeMode="contain"
-        />
+        /> */}
       </View>
+      <Toast />
     </View>
   );
 };
