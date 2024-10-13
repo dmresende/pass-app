@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { SafeAreaView, Text, View, TouchableOpacity, Modal, Image, TextInput } from "react-native";
 import Slider from '@react-native-community/slider';
-import { useRouter } from 'expo-router';
+import { router, useRouter } from 'expo-router';
 import { useStorage } from '@/src/hooks/useStorage';
+
+
 
 const generatePassword = (size: number): string => {
     const charset = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%&*_-+=^';
@@ -13,12 +15,13 @@ const generatePassword = (size: number): string => {
     return password;
 };
 
+
 const ModalPassword = ({ password, handleClose, handleSave }: { password: string; handleClose: () => void; handleSave: (title: string) => void }) => {
     const [title, setTitle] = useState('');
 
     return (
-        <View className="flex-1 justify-center items-center bg-black bg-opacity-50">
-            <View className="bg-white p-6 rounded-xl w-4/5 max-w-sm">
+        <View className="flex-1 justify-center items-center bg-zinc-500/90">
+            <View className="bg-white p-6 rounded-lg w-4/5">
                 <Text className="text-xl font-bold mb-4 text-center">Senha Gerada:</Text>
                 <Text className="text-lg mb-6 text-center">{password}</Text>
                 <TextInput
@@ -27,14 +30,20 @@ const ModalPassword = ({ password, handleClose, handleSave }: { password: string
                     value={title}
                     onChangeText={setTitle}
                 />
-                <TouchableOpacity className="bg-green-500 py-3 px-4 rounded-lg mb-2" onPress={() => handleSave(title)}>
+                <TouchableOpacity
+                    className="bg-green-500 py-3 px-4 rounded-lg mb-2"
+                    onPress={() => handleSave(title)}
+                >
                     <Text className="text-white text-center font-semibold">Salvar Senha</Text>
                 </TouchableOpacity>
-                <TouchableOpacity className="bg-red-500 py-3 px-4 rounded-lg" onPress={handleClose}>
-                    <Text className="text-white text-center font-semibold">Fechar</Text>
+                <TouchableOpacity
+                    className="bg-blue-500 py-2 rounded-lg"
+                    onPress={() => router.push('/home')}
+                >
+                    <Text className="text-white text-center">Fechar</Text>
                 </TouchableOpacity>
             </View>
-        </View>
+        </View >
     );
 };
 
@@ -90,22 +99,27 @@ const HomeScreen: React.FC = () => {
                 <Text className="text-white text-center text-lg font-semibold">Gerar senha</Text>
             </TouchableOpacity>
 
-            <Modal visible={modalVisible} animationType='fade' transparent={true}>
-                <View className="flex-1 justify-center items-center bg-zinc-500/90">
-                    <View className="bg-white p-6 rounded-lg w-4/5">
-                        <Text className="text-xl font-bold mb-4">Senha gerada:</Text>
-                        <Text className="text-lg mb-6">{passwordValue}</Text>
-                        <TouchableOpacity
-                            className="bg-blue-500 py-2 rounded-lg"
-                            onPress={() => setModalVisible(false)}
-                        >
-                            <Text className="text-white text-center">Fechar</Text>
-                        </TouchableOpacity>
-                    </View>
-                </View>
+            <Modal visible={modalVisible} animationType='fade' transparent={false}>
+                <ModalPassword
+                    password={passwordValue}
+                    handleClose={() => setModalVisible(false)}
+                    handleSave={handleSavePassword}
+                />
             </Modal>
-        </SafeAreaView>
+        </SafeAreaView >
     );
 };
+{/* <View className="flex-1 justify-center items-center bg-zinc-500/90">
+    <View className="bg-white p-6 rounded-lg w-4/5">
+        <Text className="text-xl font-bold mb-4">Senha gerada:</Text>
+        <Text className="text-lg mb-6">{passwordValue}</Text>
+        <TouchableOpacity
+            className="bg-blue-500 py-2 rounded-lg"
+            onPress={() => setModalVisible(false)}
+        >
+            <Text className="text-white text-center">Fechar</Text>
+        </TouchableOpacity>
+    </View>
+</View> */}
 
 export default HomeScreen;

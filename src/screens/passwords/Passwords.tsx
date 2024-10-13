@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, ScrollView, Image } from 'react-native';
+import React, { useState, useCallback } from 'react';
+import { View, Text, ScrollView, Image, TouchableOpacity } from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
 import { PasswordItem } from '@/src/components/PasswordItem';
 import { useStorage } from '@/src/hooks/useStorage';
 
@@ -7,19 +8,23 @@ export default function PasswordScreen() {
     const [listPasswords, setListPasswords] = useState([]);
     const { getItem, removeItem } = useStorage();
 
-    useEffect(() => {
-        loadPasswords();
-    }, []);
-
-    async function loadPasswords() {
+    //TODO: Verificar ERRO NO CONSOLE, CHAMADA REPETIDA
+    const loadPasswords = useCallback(async () => {
         try {
             const passwords = await getItem();
             setListPasswords(passwords);
+            //console.log('Senhas carregadas:', passwords);
         } catch (error) {
             console.error("Erro ao carregar senhas:", error);
             // TODO: Adicionar tratamento de erro adequado
         }
-    }
+    }, [getItem]);
+
+    useFocusEffect(
+        useCallback(() => {
+            loadPasswords();
+        }, [loadPasswords])
+    );
 
     async function handleDeletePassword(id: string) {
         try {
@@ -51,11 +56,6 @@ export default function PasswordScreen() {
                     </View>
                 )}
             </ScrollView>
-            {/* <Link href="/home" asChild>
-                <TouchableOpacity className="bg-indigo-600 m-4 p-4 rounded-xl items-center shadow-md">
-                    <Text className="text-white text-lg font-semibold">Voltar para Home</Text>
-                </TouchableOpacity>
-            </Link> */}
         </View>
     );
 }
