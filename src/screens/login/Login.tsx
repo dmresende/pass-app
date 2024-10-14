@@ -31,7 +31,6 @@ const LoginScreen = () => {
           type: 'error',
           text1: 'Falha no login',
           text2: 'Por favor, verifique suas credenciais.',
-          position: 'top'
         });
         return;
       }
@@ -39,22 +38,17 @@ const LoginScreen = () => {
       console.log('🚀Email: ', email, '💄 Password: ', password);
 
       if (email == emailStorage && password == passwordStorage) {
+        router.push('/home');
         Toast.show({
           type: 'success',
           text1: 'Login efetuado com sucesso!',
           text2: 'Bem-vindo ao aplicativo!',
-          position: 'top',
-          visibilityTime: 4000, // Exibe o toast por 4 segundos
         });
-        setTimeout(() => {
-          router.push('/home');
-        }, 500);
       } else
         Toast.show({
           type: 'error',
           text1: 'Erro',
           text2: 'Algo deu errado ao tentar fazer login.',
-          position: 'top'
         });
 
     } catch (error) {

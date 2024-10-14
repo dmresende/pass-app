@@ -1,8 +1,9 @@
 import React, { useState, useCallback } from 'react';
-import { View, Text, ScrollView, Image, TouchableOpacity } from 'react-native';
+import { View, Text, ScrollView, Image, Alert } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import { PasswordItem } from '@/src/components/PasswordItem';
 import { useStorage } from '@/src/hooks/useStorage';
+import Toast from 'react-native-toast-message';
 
 export default function PasswordScreen() {
     const [listPasswords, setListPasswords] = useState([]);
@@ -15,6 +16,10 @@ export default function PasswordScreen() {
             setListPasswords(passwords);
             //console.log('Senhas carregadas:', passwords);
         } catch (error) {
+            Toast.show({
+                type: 'error',
+                text1: 'Erro ao carregar senhas',
+            })
             console.error("Erro ao carregar senhas:", error);
             // TODO: Adicionar tratamento de erro adequado
         }
@@ -28,11 +33,25 @@ export default function PasswordScreen() {
 
     async function handleDeletePassword(id: string) {
         try {
-            const passwords = await removeItem(id);
-            setListPasswords(passwords);
+            Alert.alert('Atenção', 'Deseja excluir esta senha?', [
+                {
+                    text: 'OK',
+                    onPress: async () => {
+                        const passwords = await removeItem(id);
+                        setListPasswords(passwords)
+                    },
+                }, {
+                    text: 'Cancelar',
+                    style: 'cancel',
+                }
+            ]);
+
         } catch (error) {
-            console.error("Erro ao deletar senha:", error);
             // TODO: Adicionar tratamento de erro adequado
+            Toast.show({
+                type: 'error',
+                text1: 'Erro ao deletar senha',
+            })
         }
     }
 

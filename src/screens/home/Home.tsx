@@ -1,10 +1,8 @@
 import React, { useState } from 'react';
 import { SafeAreaView, Text, View, TouchableOpacity, Modal, Image, TextInput } from "react-native";
 import Slider from '@react-native-community/slider';
-import { router, useRouter } from 'expo-router';
 import { useStorage } from '@/src/hooks/useStorage';
-
-
+import Toast from 'react-native-toast-message';
 
 const generatePassword = (size: number): string => {
     const charset = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%&*_-+=^';
@@ -15,7 +13,6 @@ const generatePassword = (size: number): string => {
     return password;
 };
 
-
 const ModalPassword = ({ password, handleClose, handleSave }: { password: string; handleClose: () => void; handleSave: (title: string) => void }) => {
     const [title, setTitle] = useState('');
 
@@ -24,26 +21,29 @@ const ModalPassword = ({ password, handleClose, handleSave }: { password: string
             <View className="bg-white p-6 rounded-lg w-4/5">
                 <Text className="text-xl font-bold mb-4 text-center">Senha Gerada:</Text>
                 <Text className="text-lg mb-6 text-center">{password}</Text>
+
                 <TextInput
                     className="border border-gray-300 p-3 rounded-lg mb-4"
                     placeholder="Digite um título para a senha"
                     value={title}
                     onChangeText={setTitle}
                 />
+
                 <TouchableOpacity
                     className="bg-green-500 py-3 px-4 rounded-lg mb-2"
                     onPress={() => handleSave(title)}
                 >
                     <Text className="text-white text-center font-semibold">Salvar Senha</Text>
                 </TouchableOpacity>
+
                 <TouchableOpacity
                     className="bg-blue-500 py-2 rounded-lg"
-                    onPress={() => router.push('/home')}
+                    onPress={handleClose}
                 >
                     <Text className="text-white text-center">Fechar</Text>
                 </TouchableOpacity>
             </View>
-        </View >
+        </View>
     );
 };
 
@@ -51,10 +51,7 @@ const HomeScreen: React.FC = () => {
     const [size, setSize] = useState<number>(10);
     const [passwordValue, setPasswordValue] = useState<string>('');
     const [modalVisible, setModalVisible] = useState<boolean>(false);
-
-    const router = useRouter();
     const { saveItem, getItem } = useStorage();
-
 
     const handleGeneratePassword = (): void => {
         const password = generatePassword(size);
@@ -68,7 +65,17 @@ const HomeScreen: React.FC = () => {
             const newPassword = { id: Date.now().toString(), title: title || `Senha ${passwords.length + 1}`, password: passwordValue };
             await saveItem([...passwords, newPassword]);
             setModalVisible(false);
+            Toast.show({
+                type: 'success',
+                text1: 'Senha salva',
+                text2: 'Senha salva com sucesso',
+            })
         } catch (error) {
+            Toast.show({
+                type: 'error',
+                text1: 'Erro ao salvar senha',
+                text2: 'Por favor, tente novamente',
+            })
             console.error("Erro ao salvar senha:", error);
             // TODO: Adicionar tratamento de erro adequado
         }
@@ -78,7 +85,6 @@ const HomeScreen: React.FC = () => {
         <SafeAreaView className="flex-1 bg-gray-100 justify-center items-center p-6">
             <Image source={require('../../../assets/images/icon.png')} className="w-32 h-32 mb-8" />
             <Text className="text-3xl font-bold mb-8 text-gray-800">{size} caracteres</Text>
-
             <View className="w-full mb-8">
                 <Slider
                     className="h-12"
@@ -91,14 +97,12 @@ const HomeScreen: React.FC = () => {
                     onValueChange={(value: number) => setSize(Math.round(value))}
                 />
             </View>
-
             <TouchableOpacity
                 className="bg-blue-500 w-full py-4 rounded-lg"
                 onPress={handleGeneratePassword}
             >
                 <Text className="text-white text-center text-lg font-semibold">Gerar senha</Text>
             </TouchableOpacity>
-
             <Modal visible={modalVisible} animationType='fade' transparent={false}>
                 <ModalPassword
                     password={passwordValue}
@@ -109,17 +113,5 @@ const HomeScreen: React.FC = () => {
         </SafeAreaView >
     );
 };
-{/* <View className="flex-1 justify-center items-center bg-zinc-500/90">
-    <View className="bg-white p-6 rounded-lg w-4/5">
-        <Text className="text-xl font-bold mb-4">Senha gerada:</Text>
-        <Text className="text-lg mb-6">{passwordValue}</Text>
-        <TouchableOpacity
-            className="bg-blue-500 py-2 rounded-lg"
-            onPress={() => setModalVisible(false)}
-        >
-            <Text className="text-white text-center">Fechar</Text>
-        </TouchableOpacity>
-    </View>
-</View> */}
 
 export default HomeScreen;
