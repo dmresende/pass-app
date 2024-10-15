@@ -1,3 +1,4 @@
+import React from "react";
 import { Stack } from "expo-router"
 import { View } from "react-native";
 import Toast from "react-native-toast-message";
@@ -5,26 +6,14 @@ import Toast from "react-native-toast-message";
 const RootLayout = () => {
     return (
         <>
+            <Toast position="top" autoHide={true} visibilityTime={2000} />
             <Stack>
                 <Stack.Screen name="index" options={{ headerShown: false }} />
                 <Stack.Screen name="login/index" options={{ headerShown: false }} />
-                <Stack.Screen name="singUp/index" options={{
-                    title: "", headerShown: true, headerBackground() {
-
-                        return <View className="w-full h-20 bg-white" />
-                    },
-                }} />
-                <Stack.Screen
-                    name="home/index"
-                    options={{ headerShown: false }}
-                />
-                <Stack.Screen name="passwords/index" options={{
-                    title: "", headerBackground() {
-                        return <View className="w-full h-20 bg-white" />
-                    },
-                }} />
+                <Stack.Screen name="singUp/index" options={{ headerShown: false, }} />
+                <Stack.Screen name="home/index" options={{ headerShown: false }} />
+                <Stack.Screen name="passwords/index" options={{ headerShown: false, }} />
             </Stack>
-            <Toast position="top" />
         </>
     )
 }

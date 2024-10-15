@@ -12,29 +12,25 @@ const SingUpScreen = () => {
     const handleSignUp = async () => {
         // TODO: Implementar validação de usuároi e senha;
         //TODO: Implementar armazenamento de usuário e senha;
-        if (email === '' || password === '') {
-            console.log('if handleSignUp');
+        await AsyncStorage.setItem('email', email);
+        await AsyncStorage.setItem('password', password);
+
+        if (!email || !password) {
             Toast.show({
                 type: 'error',
                 text1: 'Falha no cadastro',
                 text2: 'Por favor, informe os campos corretamente',
-                position: 'top'
+
             })
             return;
         }
 
-        await AsyncStorage.setItem('email', email);
-        await AsyncStorage.setItem('password', password);
-
+        router.push('/login');
         Toast.show({
             type: 'success',
             text1: 'Cadastro realizado com sucesso',
             text2: 'Redirecionando para o login',
-            position: 'top'
         })
-        setTimeout(() => {
-            router.push('/login');
-        }, 500);
     }
 
     return (

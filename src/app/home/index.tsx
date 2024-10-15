@@ -2,7 +2,7 @@ import React from 'react';
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import HomeScreen from "@/src/screens/home/Home";
 import PasswordsScreen from '@/src/screens/passwords/Passwords';
-import { Ionicons } from "@expo/vector-icons"; // Certifique-se de que está importado corretamente
+import { Ionicons } from "@expo/vector-icons";
 import Toast from 'react-native-toast-message';
 
 
@@ -11,7 +11,12 @@ const Tab = createBottomTabNavigator();
 const HomeWithTabs = () => {
     return (
         <>
-            <Tab.Navigator>
+            <Tab.Navigator
+                screenOptions={{
+                    tabBarInactiveTintColor: '#888',
+                    tabBarActiveTintColor: '#4f46e5',
+                }}
+            >
                 <Tab.Screen
                     name="home"
                     component={HomeScreen}
@@ -29,7 +34,6 @@ const HomeWithTabs = () => {
                     options={{
                         headerShown: false,
                         title: "",
-
                         tabBarIcon: ({ color, size }) => (
                             <Ionicons name="lock-closed" size={size} color={color} />
                         ),
