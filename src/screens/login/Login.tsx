@@ -87,7 +87,7 @@ const LoginScreen = () => {
         secureTextEntry
       />
       <TouchableOpacity
-        className="w-full bg-blue-500 rounded-md py-3"
+        className="w-full bg-indigo-600 rounded-md py-3"
         onPress={handleLogin}
       >
         <Text className="text-white text-center font-bold">
@@ -97,7 +97,7 @@ const LoginScreen = () => {
       <TouchableOpacity className="w-full mt-4"
         onPress={() => router.push('/singUp')}
       >
-        <Text className="text-black text-center">
+        <Text className="color-gray-500 text-center font-bold">
           Cadastre-se
         </Text>
       </TouchableOpacity>

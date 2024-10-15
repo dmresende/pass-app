@@ -30,14 +30,14 @@ const ModalPassword = ({ password, handleClose, handleSave }: { password: string
                 />
 
                 <TouchableOpacity
-                    className="bg-green-500 py-3 px-4 rounded-lg mb-2"
+                    className="bg-green-400 py-3 px-4 rounded-lg mb-2"
                     onPress={() => handleSave(title)}
                 >
                     <Text className="text-white text-center font-semibold">Salvar Senha</Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity
-                    className="bg-blue-500 py-2 rounded-lg"
+                    className="bg-indigo-600 py-2 rounded-lg"
                     onPress={handleClose}
                 >
                     <Text className="text-white text-center">Fechar</Text>
@@ -91,14 +91,14 @@ const HomeScreen: React.FC = () => {
                     minimumValue={6}
                     maximumValue={20}
                     maximumTrackTintColor="#CBD5E0"
-                    minimumTrackTintColor="#4299E1"
-                    thumbTintColor="#2B6CB0"
+                    minimumTrackTintColor="#4F46E5"
+                    thumbTintColor="#1E293B"
                     value={size}
                     onValueChange={(value: number) => setSize(Math.round(value))}
                 />
             </View>
             <TouchableOpacity
-                className="bg-blue-500 w-full py-4 rounded-lg"
+                className="bg-indigo-600 w-full py-4 rounded-lg"
                 onPress={handleGeneratePassword}
             >
                 <Text className="text-white text-center text-lg font-semibold">Gerar senha</Text>
